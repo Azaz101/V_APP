@@ -1,0 +1,159 @@
+@model V_APP.DTOs.SignupModel
+@{
+	Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="css/style.css">
+        <title>v-App</title>
+    </head>
+    <body>
+    	<div class="shape_01"></div>
+    	<div class="page_title">
+    		<h1>v-App</h1>
+    		<p>The Brand Do You Want?</p>
+    	</div>
+    	<div class="login_page">
+    		<div class="container" style="max-width: 600px;">
+    			<div class="login_page_iiner302">
+    				<div class="row">
+	    				<div class="col-lg-12 title_section">
+	    					<ul>
+	    						<li><a href="login.html">Login</a></li>
+	    						<li><a href="signup.html">Signup</a></li>
+	    					</ul>
+	    				</div>
+	    			</div>
+	    			<div class="row">
+	    				<div class="col-lg-12">
+	    					<div class="login_page_inner">
+	    						<form action="Signup" method="post">
+	    							<div class="row">
+	    								<div class="col-lg-6">
+	    									<div class="form-group">
+										        <label asp-for="FirstName">First Name</label>
+												<input asp-for="FirstName" type="text" class="form-control" />
+										    </div>
+	    								</div>
+	    								<div class="col-lg-6">
+	    									<div class="form-group">
+												<label asp-for="LastName">Last Name</label>
+												<input asp-for="LastName" type="text" class="form-control" />
+										    </div>
+	    								</div>
+	    							</div>
+								    <div class="row">
+								    	<div class="col-lg-6">
+								    		<div class="form-group">
+												<label asp-for="Gender">Gender</label>
+												<select asp-for="Gender" class="form-control" id="exampleFormControlSelect1">
+													<option value="Male">Male</option>
+													<option value="Female">Female</option>
+													<option value="Uni Sex">Uni Sex</option>
+												</select>
+											</div>
+								    	</div>
+								    	<div class="col-lg-6">
+								    		<div class="form-group">
+										        <label asp-for="PhoneNo">Mobile Number</label>
+												<input asp-for="PhoneNo" type="number" class="form-control" />
+										    </div>
+								    	</div>
+								    </div>
+								    <div class="row">
+								    	<div class="col-lg-6">
+								    		<div class="form-group">
+										        <label asp-for="Cnic">Cnic</label>
+										        <input asp-for="Cnic" type="number" class="form-control" />
+										    </div>
+								    	</div>
+								    	<div class="col-lg-6">
+								    		<div class="form-group">
+										        <label asp-for="Address">Current Address</label>
+										        <input asp-for="Address" type="text" class="form-control" />
+										    </div>
+								    	</div>
+								    </div>
+								    @*<div class="row">
+								    	<div class="col-lg-6">
+								    		<div class="form-group">
+										        <label for="exampleInputEmail1">Shop Address</label>
+										        <input type="number" class="form-control" />
+										    </div>
+								    	</div>
+								    	<div class="col-lg-6">
+								    		<div class="form-group">
+												<label for="exampleFormControlSelect1">Category</label>
+												<select class="form-control" id="exampleFormControlSelect1">
+													<option>Lifestyle</option>
+													<option>Food</option>
+													<option>News</option>
+													<option>Trending</option>
+												</select>
+											</div>
+								    	</div>
+								    </div>*@
+									<div class="row">
+								    	<div class="col-lg-12">
+											<div class="form-group">
+												<label asp-for="Email">Email</label>
+												<input asp-for="Email" type="text" class="form-control" />
+											</div>
+								    	</div>
+									</div>
+									<div class="row">
+										<div class="col-lg-6">
+											<div class="form-group">
+										        <label asp-for="Username">Email</label>
+										        <input asp-for="Username" type="text" class="form-control" />
+										    </div>
+										</div>
+										<div class="col-lg-6">
+											<div class="form-group">
+										        <label asp-for="Password">Password</label>
+										        <input asp-for="Password" type="password" class="form-control" id="exampleInputPassword1" />
+										    </div>
+										</div>
+									</div>
+								    <div class="row">
+								    	<div class="col-lg-12">
+								    		<div class="form-group form-check">
+											    <input type="checkbox" class="form-check-input" id="exampleCheck1">
+											    <label class="form-check-label" for="exampleCheck1">Terms And Conditions</label>
+										  	</div>
+								    	</div>
+								    </div>
+								    
+								    
+								    
+									
+								    
+								    <button type="submit" class="btn">Submit</button>
+								</form>
+
+	    					</div>
+	    				</div>
+	    			</div>
+	    			<div class="row">
+	    				<div class="col-lg-12 social_menu">
+	    					<h1>or</h1>
+	    					<ul>
+		    					<li><a href="" target="_blank"><span><i class="fab fa-instagram"></i></span></a></li>
+								<li><a href="" target="_blank"><span><i class="fab fa-facebook-square"></i></span></a></li>
+								<li><a href="" target="_blank"><span><i class="fab fa-twitter"></i></span></a></li>
+								<li><a href="" target="_blank"><span><i class="fab fa-linkedin-in"></i></span></a></li>
+							</ul>
+	    				</div>
+	    			</div>
+    			</div>
+    		</div>
+    	</div>
+        <script src="bootstrap/js/jquery.slim.min.js"></script>
+        <script src="bootstrap/js/bootstrap.min.js"></script>
+    --></body>
+</html>
