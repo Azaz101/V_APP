@@ -155,11 +155,19 @@ namespace V_APP.Models
                     .HasMaxLength(50)
                     .HasColumnName("email");
 
+                entity.Property(e => e.FirstName)
+                    .HasMaxLength(50)
+                    .HasColumnName("first_name");
+
                 entity.Property(e => e.Gender)
                     .HasMaxLength(10)
                     .HasColumnName("gender");
 
                 entity.Property(e => e.Image).HasColumnName("image");
+
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(50)
+                    .HasColumnName("last_name");
 
                 entity.Property(e => e.MetaData).HasColumnName("meta_data");
 
@@ -170,10 +178,6 @@ namespace V_APP.Models
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("modified_date");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .HasColumnName("name");
 
                 entity.Property(e => e.PhoneNumber)
                     .HasMaxLength(50)
@@ -513,6 +517,10 @@ namespace V_APP.Models
                     .HasMaxLength(50)
                     .HasColumnName("email");
 
+                entity.Property(e => e.FirstName)
+                    .HasMaxLength(50)
+                    .HasColumnName("first_name");
+
                 entity.Property(e => e.Gender)
                     .HasMaxLength(10)
                     .HasColumnName("gender");
@@ -520,6 +528,10 @@ namespace V_APP.Models
                 entity.Property(e => e.Image)
                     .HasMaxLength(250)
                     .HasColumnName("image");
+
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(50)
+                    .HasColumnName("last_name");
 
                 entity.Property(e => e.LongDescription).HasColumnName("long_description");
 
@@ -534,10 +546,6 @@ namespace V_APP.Models
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("modified_date");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .HasColumnName("name");
 
                 entity.Property(e => e.PhoneNumber)
                     .HasMaxLength(50)
@@ -687,9 +695,18 @@ namespace V_APP.Models
                     .HasMaxLength(50)
                     .HasColumnName("email");
 
+                entity.Property(e => e.FirstName)
+                    .HasMaxLength(10)
+                    .HasColumnName("first_name")
+                    .IsFixedLength();
+
                 entity.Property(e => e.Image)
                     .HasMaxLength(250)
                     .HasColumnName("image");
+
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(50)
+                    .HasColumnName("last_name");
 
                 entity.Property(e => e.MetaData).HasColumnName("meta_data");
 
@@ -700,10 +717,6 @@ namespace V_APP.Models
                 entity.Property(e => e.ModifiedDate)
                     .HasColumnType("datetime")
                     .HasColumnName("modified__date");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(50)
-                    .HasColumnName("name");
 
                 entity.Property(e => e.PhoneNumber)
                     .HasMaxLength(50)

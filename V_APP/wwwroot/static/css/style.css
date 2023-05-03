@@ -1,0 +1,353 @@
+h1,h2,h3,h4,h5,h6,ul,li,p{
+	padding: 0px;
+	margin: 0px;
+}
+a{
+	text-decoration: none !important;
+}
+body{
+	background-image: url('../img/bg.jpg');
+	padding: 0px;
+	margin: 0px;
+}
+label{
+	
+font-weight: 600;
+}
+input{
+	
+border-radius: 46px;
+}
+/*login_page*/
+.shape_01{
+	background-color: red;
+	height: 200px;
+	border-bottom-left-radius: 200px;
+	border-bottom-right-radius: 200px;
+}
+.login_page{
+	
+	
+}
+.login_page .title_section{
+	
+	
+}
+.login_page .title_section h1{
+	
+text-transform: uppercase;
+	
+text-align: center;
+	
+font-weight: 700;
+	
+padding-bottom: 10px;
+}
+.login_page .title_section ul{
+	
+text-align: center;
+	
+padding-bottom: 20px;
+}
+.login_page .title_section ul li{
+	
+list-style: none;
+	
+display: inline-block;
+}
+.login_page .title_section ul li a{
+	
+background-color: #000;
+	
+color: #fff;
+	
+padding: 9px 36px;
+	
+border-radius: 17px;
+	
+font-weight: 500;
+	
+transition: 0.5s;
+}
+.login_page .title_section ul li a:hover{
+	text-decoration: none;
+	background-color: #f00;
+}
+.login_page_inner{
+	
+background-color: #fff;
+}
+.login_page_iiner302{
+	
+background-color: #fff;
+	
+padding: 50px;
+	
+border-radius: 50px;
+}
+.login_page_inner button{
+	
+background-color: #f00;
+	
+text-align: center;
+	
+margin: auto;
+	
+justify-content: center;
+	
+place-content: center;
+	
+width: 100%;
+	
+color: #fff;
+	
+text-transform: uppercase;
+	
+font-weight: 800;
+	
+padding: 10px 0;
+	
+border-radius: 20px;
+border: solid 2px transparent;
+}
+.login_page_inner button:hover{
+	border: solid 2px #000;
+	background-color: transparent;
+	
+}
+.social_menu h1{
+	
+text-align: center;
+	
+text-transform: uppercase;
+	
+padding-top: 20px;
+}
+.social_menu ul{
+	
+text-align: center;
+	
+padding-top: 10px;
+}
+.social_menu ul li{
+	
+list-style-type: none;
+	
+display: inline-block;
+}
+.social_menu ul li a{
+	
+	
+}
+.social_menu ul li a span{
+	
+	
+}
+.social_menu ul li a span i{
+	
+width: 40px;
+	
+height: 40px;
+	
+line-height: 40px;
+	
+text-align: center;
+	
+vertical-align: middle;
+	
+justify-content: center;
+	
+place-content: center;
+	
+border: solid 1px #000;
+	
+color: #000;
+	
+border-radius: 20px;
+	
+font-size: 21px;
+	
+transition: 0.5s;
+}
+.social_menu ul li a span i:hover{
+	
+background-color: #f00;
+	
+color: #fff;
+}
+.page_title{margin-top: -130px;text-align: center;padding-bottom: 10px;}
+.page_title h1{
+	
+text-transform: uppercase;
+	
+text-align: center;
+	
+font-weight: 700;
+	
+color: #fff;
+}
+.page_title p{
+	
+color: #fff;
+	
+padding-bottom: 10px;
+}
+
+
+
+
+
+
+/*page_title__category*/
+.page_title__category{
+	padding-bottom: 10px;
+	background-color: red;
+	text-align: center;
+}
+.page_title__category h1{
+
+	text-transform: uppercase;
+
+	text-align: center;
+
+	font-weight: 700;
+
+	color: #fff;
+}
+.page_title__category p{
+
+	color: #fff;
+
+	padding-bottom: 10px;
+}
+.login_page_categoriy{
+	
+background-color: #222;
+}
+.login_page_categoriy .menu{
+	
+}
+.login_page_categoriy .menu ul{
+	
+
+}
+.login_page_categoriy .menu ul li{
+	
+display: inline-block;
+	
+padding: 14px 0px;
+}
+.login_page_categoriy .menu ul li a{
+	
+text-transform: uppercase;
+	
+color: #fff;
+	
+padding: 16px 15px;
+	
+transition: 0.5s;
+	
+text-decoration: none;
+}
+.login_page_categoriy .menu ul li a:hover{
+	
+background-color: red;
+}
+.login_page_categoriy .navbar-light .navbar-nav .nav-link{
+	    padding: 0px;
+    margin: 0px;
+    color: #fff;
+    padding: 3px 20px;
+    text-transform: capitalize;
+	
+}
+.login_page_categoriy .dropdown-menu{
+	    padding: 0px;
+    margin: 0;
+	
+}
+.login_page_categoriy .dropdown-menu .dropdown-item{
+	    background-color: #000;
+    color: #fff;
+    border-bottom: solid 1px #ffffff42;
+    text-transform: capitalize;
+    padding: 6px 17px;
+    transition: 0.5s;
+	
+}
+.login_page_categoriy .dropdown-menu .dropdown-item:hover{
+	
+	    background-color: red;
+}
+.sub_categoreis_2022 a{
+	
+	color: #000;
+}
+.sub_categoreis_2022 .btn{
+	background-color: #000;
+    color: #fff;
+    transition: 0.5s;
+}
+.sub_categoreis_2022 .btn:hover{
+	background-color: red;
+	
+}
+
+
+
+
+
+
+
+
+/*footer*/
+.footer{
+	background-color: #222;
+
+	
+}
+.footer p{
+	    color: #fff;
+    padding: 10px 0;
+    text-align: center;
+	
+}
+
+
+
+
+
+/*main_categories*/
+.main_categories{
+	
+padding: 80px;
+}
+.main_categories_box{
+	padding-bottom: 30px;
+}
+.main_categories_box .images{
+	
+	
+}
+.main_categories_box .images img{
+	
+	
+}
+.main_categories_box .detail{
+	
+	
+}
+.main_categories_box .detail h1{
+	
+text-align: center;
+	
+background-color: red;
+	
+color: #fff;
+	
+padding: 5px 0;
+transition: 0.5s;
+}
+.main_categories_box:hover .detail h1{
+	background-color: #000;
+}

@@ -20,13 +20,58 @@ namespace V_APP.Controllers
             _dbContext = dbContext;
             _he = he;
         }
-        [HttpGet]
-        public IActionResult Signup()
+		[HttpGet]
+		public IActionResult SignupCustomer()
+		{
+			return View();
+		}
+		[HttpPost]
+		public IActionResult SignupSeller(SignupCustomer U)
+		{
+			SystemUser systemuser = new SystemUser();
+			systemuser.UserName = U.Username;
+			systemuser.Password = U.Password;
+			systemuser.Status = Constants.Status.Active;
+			systemuser.Type = 1;
+			_dbContext.SystemUsers.Add(systemuser);
+			_dbContext.SaveChanges();
+
+			//to add image and its address
+			//if (img != null)
+			//{
+			//	string FinalFilePathVirtual = "/data/student/pics/" + Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
+
+			//	using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
+			//	{
+			//		img.CopyTo(FS);
+			//	}
+			//	student.Images = FinalFilePathVirtual;
+			//}
+			Customer customer = new Customer();
+			customer.SystemUserId = systemuser.Id;
+			customer.FirstName = U.FirstName;
+			customer.LastName = U.LastName;
+			customer.Gender = U.Gender;
+			customer.PhoneNumber = U.PhoneNo;
+			//customer.Cnic = U.Cnic;
+			customer.Address = U.Address;
+			customer.Email = U.Email;
+			customer.Status = Constants.Status.Active;
+			customer.CreatedDate = DateTime.Now;
+			customer.Status = Constants.Status.Active;
+			_dbContext.Customers.Add(customer);
+			_dbContext.SaveChanges();
+
+			ViewBag.Success = "Registered Successfully.";
+			return RedirectToAction(nameof(Login));
+		}
+		[HttpGet]
+        public IActionResult SignupSeller()
         {
             return View();
         }
         [HttpPost]
-        public IActionResult Signup(SignupModel U)
+        public IActionResult SignupSeller(SignupSeller U)
         {
 			SystemUser systemuser = new SystemUser();
 			systemuser.UserName = U.Username;
@@ -47,36 +92,21 @@ namespace V_APP.Controllers
             //	}
             //	student.Images = FinalFilePathVirtual;
             //}
-            if (U.Type == 1)
-            {
-                Customer customer = new Customer();
-                customer.SystemUserId = systemuser.Id;
-                customer.Status = Constants.Status.Active;
-                customer.CreatedDate = DateTime.Now;
-                customer.Status = Constants.Status.Active;
-                _dbContext.Customers.Add(customer);
-                _dbContext.SaveChanges();
-            }
-            else if (U.Type == 2)
-            {
-                Seller seller = new Seller();
-                seller.SystemUserId = systemuser.Id;
-                seller.Status = Constants.Status.Active;
-                seller.CreatedDate = DateTime.Now;
-                seller.Status = Constants.Status.Active;
-                _dbContext.Sellers.Add(seller);
-                _dbContext.SaveChanges();
-            }
-            else
-            {
-                staff staff = new staff();
-                staff.SystemUserId = systemuser.Id;
-                staff.Status = Constants.Status.Active;
-                staff.CreatedDate = DateTime.Now;
-                staff.Status = Constants.Status.Active;
-                _dbContext.staff.Add(staff);
-                _dbContext.SaveChanges();
-            }
+            Seller seller = new Seller();
+			seller.SystemUserId = systemuser.Id;
+			seller.FirstName = U.FirstName;
+			seller.LastName = U.LastName;
+			seller.Gender = U.Gender;
+			seller.PhoneNumber = U.PhoneNo;
+			seller.Cnic = U.Cnic;
+			seller.Address = U.Address;
+			seller.Email = U.Email;
+            seller.Status = Constants.Status.Active;
+            seller.CreatedDate = DateTime.Now;
+            seller.Status = Constants.Status.Active;
+            _dbContext.Sellers.Add(seller);
+            _dbContext.SaveChanges();
+
             ViewBag.Success = "Registered Successfully.";
 			return RedirectToAction(nameof(Login));
         }
