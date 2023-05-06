@@ -52,7 +52,7 @@
                     <div class="row d_flex">
                         <div class="col-md-4">
                             <ul class="right_icon d_none1">
-                                <li><a href="#"><img src="~/asset/images/shopping.png" alt="#" /></a> </li>
+                                <li><a asp-action="Index"><img src="~/asset/images/shopping.png" alt="#" /></a> </li>
                                 <li><a href="#" class="order">Order Now</a> </li>
                             </ul>
                         </div>
@@ -61,9 +61,11 @@
                         </div>
                         <div class="col-md-4">
                             <ul class="conta_icon d_none1">
-                                @if(Context.Session == null)
+                                @if(Context.Session.GetInt32("Id") == null)
                                 {
                                     <li><a asp-action="Login" class="order">Login</a> </li>
+                                    <li><a asp-action="SignupCustomer" class="order">Signup as Customer</a> </li>
+                                    <li><a asp-action="SignupSeller" class="order">Signup as Seller</a> </li>
                                 }
                                 else
                                 {

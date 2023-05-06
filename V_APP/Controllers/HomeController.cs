@@ -26,7 +26,7 @@ namespace V_APP.Controllers
 			return View();
 		}
 		[HttpPost]
-		public IActionResult SignupSeller(SignupCustomer U)
+		public IActionResult SignupCustomer(SignupCustomer U)
 		{
 			SystemUser systemuser = new SystemUser();
 			systemuser.UserName = U.Username;
@@ -52,10 +52,11 @@ namespace V_APP.Controllers
 			customer.FirstName = U.FirstName;
 			customer.LastName = U.LastName;
 			customer.Gender = U.Gender;
-			customer.PhoneNumber = U.PhoneNo;
-			//customer.Cnic = U.Cnic;
-			customer.Address = U.Address;
+			customer.PhoneNumber = U.PhoneNumber;
+            customer.City = U.City;
+            customer.Address = U.Address;
 			customer.Email = U.Email;
+            customer.Dob = U.Dob;
 			customer.Status = Constants.Status.Active;
 			customer.CreatedDate = DateTime.Now;
 			customer.Status = Constants.Status.Active;
@@ -77,7 +78,7 @@ namespace V_APP.Controllers
 			systemuser.UserName = U.Username;
 			systemuser.Password = U.Password;
             systemuser.Status = Constants.Status.Active;
-			systemuser.Type = U.Type;
+			systemuser.Type = 2;
 			_dbContext.SystemUsers.Add(systemuser);
 			_dbContext.SaveChanges();
 
@@ -96,11 +97,15 @@ namespace V_APP.Controllers
 			seller.SystemUserId = systemuser.Id;
 			seller.FirstName = U.FirstName;
 			seller.LastName = U.LastName;
+			seller.CompanyName = U.CompanyName;
+			seller.ShortDescription = U.ShortDescription;
 			seller.Gender = U.Gender;
-			seller.PhoneNumber = U.PhoneNo;
+			seller.PhoneNumber = U.PhoneNumber;
 			seller.Cnic = U.Cnic;
+			seller.City = U.City;
 			seller.Address = U.Address;
 			seller.Email = U.Email;
+			seller.Dob = U.Dob;
             seller.Status = Constants.Status.Active;
             seller.CreatedDate = DateTime.Now;
             seller.Status = Constants.Status.Active;
@@ -129,36 +134,39 @@ namespace V_APP.Controllers
             HttpContext.Session.SetString("UserName", User.UserName);
             HttpContext.Session.SetInt32("Type", User.Type ?? 0);
 
-            //if (User.Role == Constants.Role.Customer)
-            //{
-            //    var supervisor = _dbContext.customer.Where(u => u.SystemuserId == User.Id).FirstOrDefault();
-            //    if (supervisor != null && supervisor.Images != null)
-            //    {
-            //        HttpContext.Session.SetString("Userpic", supervisor.Images);
-            //        HttpContext.Session.SetString("Name", supervisor.Name);
-            //        HttpContext.Session.SetInt32("SuperId", supervisor.Id);
-            //    }
-            //}
-            //else if (User.Role == Constants.Role.Seller)
-            //{
-            //    var stu = _dbContext.seller.Where(u => u.SystemuserId == User.Id).FirstOrDefault();
-            //    if (stu != null && stu.Images != null)
-            //    {
-            //        HttpContext.Session.SetString("Userpic", stu.Images);
-            //        HttpContext.Session.SetString("Name", stu.Name);
-            //        HttpContext.Session.SetInt32("StuId", stu.Id);
-            //    }
-            //}
-            //else
-            //{
-            //    var admin = _dbContext.admins.Where(u => u.SystemuserId == User.Id).FirstOrDefault();
-            //    if (admin != null && admin.Images != null)
-            //    {
-            //        HttpContext.Session.SetString("Userpic", admin.Images);
-            //        HttpContext.Session.SetString("Name", admin.Name);
-            //        HttpContext.Session.SetInt32("AdminId", admin.Id);
-            //    }
-            //}
+            if (User.Type == Constants.Type.Customer)
+            {
+                var customer = _dbContext.Customers.Where(u => u.SystemUserId == User.Id).FirstOrDefault();
+                if (customer != null && customer.Image != null)
+                {
+                    HttpContext.Session.SetString("Userpic", customer.Image);
+                    HttpContext.Session.SetString("FirstName", customer.FirstName);
+                    HttpContext.Session.SetString("LastName", customer.LastName);
+                    HttpContext.Session.SetInt32("CustomerId", customer.Id);
+                }
+            }
+            else if (User.Type == Constants.Type.Seller)
+            {
+                var seller = _dbContext.Sellers.Where(u => u.SystemUserId == User.Id).FirstOrDefault();
+                if (seller != null && seller.Image != null)
+                {
+                    HttpContext.Session.SetString("Userpic", seller.Image);
+                    HttpContext.Session.SetString("FirstName", seller.FirstName);
+                    HttpContext.Session.SetString("LastName", seller.LastName);
+                    HttpContext.Session.SetInt32("SellerId", seller.Id);
+                }
+            }
+            else
+            {
+                var staff = _dbContext.staff.Where(u => u.SystemUserId == User.Id).FirstOrDefault();
+                if (staff != null && staff.Image != null)
+                {
+                    HttpContext.Session.SetString("Userpic", staff.Image);
+                    HttpContext.Session.SetString("FirstName", staff.FirstName);
+                    HttpContext.Session.SetString("LastName", staff.LastName);
+                    HttpContext.Session.SetInt32("StaffId", staff.Id);
+                }
+            }
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Logout()

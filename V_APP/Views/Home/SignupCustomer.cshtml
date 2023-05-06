@@ -1,4 +1,4 @@
-@model V_APP.DTOs.SignupSeller
+@model V_APP.DTOs.SignupCustomer
 @{
 	Layout = null;
 }
@@ -32,7 +32,7 @@
 	    			<div class="row">
 	    				<div class="col-lg-12">
 	    					<div class="login_page_inner">
-	    						<form action="Signup" method="post">
+	    						<form action="SignupCustomer" method="post">
 	    							<div class="row">
 	    								<div class="col-lg-6">
 	    									<div class="form-group">
@@ -52,6 +52,7 @@
 								    		<div class="form-group">
 												<label asp-for="Gender">Gender</label>
 												<select asp-for="Gender" class="form-control" id="exampleFormControlSelect1">
+													<option disabled selected>Select an option...</option>
 													<option value="Male">Male</option>
 													<option value="Female">Female</option>
 													<option value="Uni Sex">Uni Sex</option>
@@ -60,16 +61,21 @@
 								    	</div>
 								    	<div class="col-lg-6">
 								    		<div class="form-group">
-										        <label asp-for="PhoneNo">Mobile Number</label>
-												<input asp-for="PhoneNo" type="number" class="form-control" />
+										        <label asp-for="PhoneNumber">Mobile Number</label>
+												<input asp-for="PhoneNumber" type="number" class="form-control" />
 										    </div>
 								    	</div>
 								    </div>
 								    <div class="row">
 								    	<div class="col-lg-6">
 								    		<div class="form-group">
-										        <label asp-for="Cnic">Cnic</label>
-										        <input asp-for="Cnic" type="number" class="form-control" />
+										        <label asp-for="City">City</label>
+										        <Select asp-for="City" type="number" class="form-control">
+												<option value="Sialkot">Sialkot</option>
+												<option value=""></option>
+												<option value=""></option>
+												<option value=""></option>
+												</Select>
 										    </div>
 								    	</div>
 								    	<div class="col-lg-6">
@@ -99,12 +105,18 @@
 								    	</div>
 								    </div>*@
 									<div class="row">
-								    	<div class="col-lg-12">
+								    	<div class="col-lg-6">
 											<div class="form-group">
 												<label asp-for="Email">Email</label>
 												<input asp-for="Email" type="text" class="form-control" />
 											</div>
 								    	</div>
+										<div class="col-lg-6">
+											<div class="form-group">
+												<label asp-for="Dob">Date of Birth</label>
+												<input asp-for="Dob" type="date" class="form-control" id="exampleInputPassword1" />
+											</div>
+										</div>
 									</div>
 									<div class="row">
 										<div class="col-lg-6">
@@ -120,17 +132,6 @@
 										    </div>
 										</div>
 									</div>
-								<div class="row">
-									<div class="col-lg-12">
-										<div class="form-group">
-											<label asp-for="Type">Type</label>
-											<select asp-for="Type" class="form-control" >
-												<option value="1">Customer</option>
-												<option value="2">Seller</option>
-											</select>
-										</div>
-									</div>
-								</div>
 								    <div class="row">
 								    	<div class="col-lg-12">
 								    		<div class="form-group form-check">

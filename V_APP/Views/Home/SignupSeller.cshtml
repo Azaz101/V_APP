@@ -32,7 +32,7 @@
 	    			<div class="row">
 	    				<div class="col-lg-12">
 	    					<div class="login_page_inner">
-	    						<form action="Signup" method="post">
+	    						<form action="SignupSeller" method="post">
 	    							<div class="row">
 	    								<div class="col-lg-6">
 	    									<div class="form-group">
@@ -60,8 +60,8 @@
 								    	</div>
 								    	<div class="col-lg-6">
 								    		<div class="form-group">
-										        <label asp-for="PhoneNo">Mobile Number</label>
-												<input asp-for="PhoneNo" type="number" class="form-control" />
+										        <label asp-for="PhoneNumber">Mobile Number</label>
+												<input asp-for="PhoneNumber" type="number" class="form-control" />
 										    </div>
 								    	</div>
 								    </div>
@@ -79,6 +79,20 @@
 										    </div>
 								    	</div>
 								    </div>
+									<div class="row">
+										<div class="col-lg-6">
+											<div class="form-group">
+												<label asp-for="CompanyName">Company Name</label>
+												<input asp-for="CompanyName" type="text" class="form-control" />
+											</div>
+										</div>
+										<div class="col-lg-6">
+											<div class="form-group">
+												<label asp-for="Dob">Date of Birth</label>
+												<input asp-for="Dob" type="date" class="form-control" />
+											</div>
+										</div>
+									</div>
 								    @*<div class="row">
 								    	<div class="col-lg-6">
 								    		<div class="form-group">
@@ -99,12 +113,18 @@
 								    	</div>
 								    </div>*@
 									<div class="row">
-								    	<div class="col-lg-12">
+								    	<div class="col-lg-6">
 											<div class="form-group">
 												<label asp-for="Email">Email</label>
 												<input asp-for="Email" type="text" class="form-control" />
 											</div>
 								    	</div>
+										<div class="col-lg-6">
+											<div class="form-group">
+											<label asp-for="ShortDescription">Description</label>
+												<input asp-for="ShortDescription" type="text" class="form-control" />
+											</div>
+										</div>
 									</div>
 									<div class="row">
 										<div class="col-lg-6">
@@ -120,17 +140,6 @@
 										    </div>
 										</div>
 									</div>
-								<div class="row">
-									<div class="col-lg-12">
-										<div class="form-group">
-											<label asp-for="Type">Type</label>
-											<select asp-for="Type" class="form-control" >
-												<option value="1">Customer</option>
-												<option value="2">Seller</option>
-											</select>
-										</div>
-									</div>
-								</div>
 								    <div class="row">
 								    	<div class="col-lg-12">
 								    		<div class="form-group form-check">
