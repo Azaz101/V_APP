@@ -5,6 +5,7 @@ using V_APP.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.IO.Pipes;
+using System.Net.Mail;
 
 namespace V_APP.Controllers
 {
@@ -20,6 +21,84 @@ namespace V_APP.Controllers
             _dbContext = dbContext;
             _he = he;
         }
+		#region Static
+		[HttpGet]
+		public IActionResult Login()
+		{
+			return View();
+		}
+		[HttpPost]
+		public IActionResult Login(LoginModel U)
+		{
+			var User = _dbContext.SystemUsers.Where(a => a.UserName == U.Username && a.Password == U.Password).FirstOrDefault();
+			if (User == null)
+			{
+				ViewBag.Error = "Invalid user name or password";
+				return View();
+			}
+			//Success Login
+			HttpContext.Session.SetInt32("UserId", User.Id);
+			HttpContext.Session.SetString("UserName", User.UserName);
+			HttpContext.Session.SetInt32("UserType", User.Type ?? 0);
+
+			if (User.Type == Constants.Type.Customer)
+			{
+				var customer = _dbContext.Customers.Where(u => u.SystemUserId == User.Id).FirstOrDefault();
+				if (customer != null && customer.Image != null)
+				{
+					HttpContext.Session.SetString("Pic", customer.Image);
+					HttpContext.Session.SetString("FirstName", customer.FirstName);
+					HttpContext.Session.SetString("LastName", customer.LastName);
+					HttpContext.Session.SetInt32("Id", customer.Id);
+				}
+			}
+			else if (User.Type == Constants.Type.Seller)
+			{
+				var seller = _dbContext.Sellers.Where(u => u.SystemUserId == User.Id).FirstOrDefault();
+				if (seller != null && seller.Image != null)
+				{
+					HttpContext.Session.SetString("Pic", seller.Image);
+					HttpContext.Session.SetString("FirstName", seller.FirstName);
+					HttpContext.Session.SetString("LastName", seller.LastName);
+					HttpContext.Session.SetInt32("Id", seller.Id);
+				}
+			}
+			else
+			{
+				var staff = _dbContext.staff.Where(u => u.SystemUserId == User.Id).FirstOrDefault();
+				if (staff != null && staff.Image != null)
+				{
+					HttpContext.Session.SetString("Pic", staff.Image);
+					HttpContext.Session.SetString("FirstName", staff.FirstName);
+					HttpContext.Session.SetString("LastName", staff.LastName);
+					HttpContext.Session.SetInt32("Id", staff.Id);
+				}
+			}
+			return RedirectToAction(nameof(Index));
+		}
+		public IActionResult Logout()
+		{
+			HttpContext.Session.Clear();
+			return RedirectToAction(nameof(Login));
+		}
+		public IActionResult Index()
+
+		{
+			return View();
+		}
+
+		public IActionResult Privacy()
+		{
+			return View();
+		}
+
+		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+		public IActionResult Error()
+		{
+			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+		}
+		#endregion
+		#region Customer
 		[HttpGet]
 		public IActionResult SignupCustomer()
 		{
@@ -53,10 +132,10 @@ namespace V_APP.Controllers
 			customer.LastName = U.LastName;
 			customer.Gender = U.Gender;
 			customer.PhoneNumber = U.PhoneNumber;
-            customer.City = U.City;
-            customer.Address = U.Address;
+			customer.City = U.City;
+			customer.Address = U.Address;
 			customer.Email = U.Email;
-            customer.Dob = U.Dob;
+			customer.Dob = U.Dob;
 			customer.Status = Constants.Status.Active;
 			customer.CreatedDate = DateTime.Now;
 			customer.Status = Constants.Status.Active;
@@ -66,6 +145,8 @@ namespace V_APP.Controllers
 			ViewBag.Success = "Registered Successfully.";
 			return RedirectToAction(nameof(Login));
 		}
+		#endregion
+		#region Seller
 		[HttpGet]
         public IActionResult SignupSeller()
         {
@@ -115,80 +196,84 @@ namespace V_APP.Controllers
             ViewBag.Success = "Registered Successfully.";
 			return RedirectToAction(nameof(Login));
         }
-        [HttpGet]
-        public IActionResult Login()
-        {
-            return View();
-        }
-        [HttpPost]
-        public IActionResult Login(LoginModel U)
-        {
-            var User = _dbContext.SystemUsers.Where(a => a.UserName == U.Username && a.Password == U.Password).FirstOrDefault();
-            if (User == null)
-            {
-                ViewBag.Error = "Invalid user name or password";
-                return View();
-            }
-            //Success Login
-            HttpContext.Session.SetInt32("Id", User.Id);
-            HttpContext.Session.SetString("UserName", User.UserName);
-            HttpContext.Session.SetInt32("Type", User.Type ?? 0);
+		#endregion
+		#region Product
+		[HttpGet]
+		public IActionResult AddUpdateProduct(int? id)
+		{
+			if (id != 0)
+			{
+				var list = _dbContext.Products.Find(id);
+				return View(list);
+			}
+			return View();
+		}
+		[HttpPost]
+		public IActionResult AddUpdateProduct(Product product, IFormFile? img)
+		{
+			if (product.Id == 0)
+			{
+				//to add image and its address
+				if (img != null)
+				{
+					string FinalFilePathVirtual = "/data/" + Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
 
-            if (User.Type == Constants.Type.Customer)
-            {
-                var customer = _dbContext.Customers.Where(u => u.SystemUserId == User.Id).FirstOrDefault();
-                if (customer != null && customer.Image != null)
-                {
-                    HttpContext.Session.SetString("Userpic", customer.Image);
-                    HttpContext.Session.SetString("FirstName", customer.FirstName);
-                    HttpContext.Session.SetString("LastName", customer.LastName);
-                    HttpContext.Session.SetInt32("CustomerId", customer.Id);
-                }
-            }
-            else if (User.Type == Constants.Type.Seller)
-            {
-                var seller = _dbContext.Sellers.Where(u => u.SystemUserId == User.Id).FirstOrDefault();
-                if (seller != null && seller.Image != null)
-                {
-                    HttpContext.Session.SetString("Userpic", seller.Image);
-                    HttpContext.Session.SetString("FirstName", seller.FirstName);
-                    HttpContext.Session.SetString("LastName", seller.LastName);
-                    HttpContext.Session.SetInt32("SellerId", seller.Id);
-                }
-            }
-            else
-            {
-                var staff = _dbContext.staff.Where(u => u.SystemUserId == User.Id).FirstOrDefault();
-                if (staff != null && staff.Image != null)
-                {
-                    HttpContext.Session.SetString("Userpic", staff.Image);
-                    HttpContext.Session.SetString("FirstName", staff.FirstName);
-                    HttpContext.Session.SetString("LastName", staff.LastName);
-                    HttpContext.Session.SetInt32("StaffId", staff.Id);
-                }
-            }
-            return RedirectToAction(nameof(Index));
-        }
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction(nameof(Login));
-        }
-        public IActionResult Index()
-        
-        {
-            return View();
-        }
+					using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
+					{
+						img.CopyTo(FS);
+					}
+					product.Image = FinalFilePathVirtual;
+				}
+				product.SellerId = HttpContext.Session.GetInt32("Id");
+				product.NoOfView = 0;
+				product.CreatedDate = DateTime.Now;
+				product.CreatedBy = HttpContext.Session.GetString("FirstName") + HttpContext.Session.GetString("LastName");
+				_dbContext.Products.Add(product);
+				_dbContext.SaveChanges();
+				TempData["message"] = "Product " + Constants.Message.AddMessage;
+			}
+			else
+			{
+				var model = _dbContext.Products.Where(m => m.Id == product.Id).FirstOrDefault();
+				if (model != null)
+				{
+					//to update image and its address
+					if (img != null)
+					{
+						string FinalFilePathVirtual = "/data/" + Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
 
-        public IActionResult Privacy()
+						using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
+						{
+							img.CopyTo(FS);
+						}
+						product.Image = FinalFilePathVirtual;
+					}
+					model.ModifiedDate = DateTime.Now;
+					_dbContext.Products.Update(product);
+					_dbContext.SaveChanges();
+				}
+			}
+			return RedirectToAction(nameof(ProductList));
+		}
+		[HttpGet]
+		public IActionResult ProductList()
+		{
+			var list = _dbContext.Products.ToList();
+			return View(list);
+		}
+        public IActionResult ProductDetail(int id)
         {
-            return View();
+			var list = _dbContext.Products.Where(u => u.Id == id).FirstOrDefault();
+            return View(list);
         }
+        public IActionResult DeleteProduct(int id)
+        {
+			var list = _dbContext.Products.Find(id);
+			_dbContext.Products.Remove(list);
+			_dbContext.SaveChanges();
+            return RedirectToAction(nameof(ProductList));
+        }
+        #endregion
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
     }
 }
