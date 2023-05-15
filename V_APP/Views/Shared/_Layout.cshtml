@@ -52,7 +52,12 @@
                     <div class="row d_flex">
                         <div class="col-md-4">
                             <ul class="right_icon d_none1">
-                                <li><a asp-action="Index"><img src="~/asset/images/shopping.png" alt="#" /></a> </li>
+                                <li><a asp-action="Index"><img src="~/asset/images/shopping.png" alt="#" />
+                                        @*<span class="position-absolute top-0 badge rounded-pill bg-danger" id="cartcount">
+                                            <span class="visually-hidden"></span>
+                                        </span>*@
+                                    </a>
+                                </li>
                                 <li><a href="#" class="order">Order Now</a> </li>
                             </ul>
                         </div>
@@ -61,15 +66,15 @@
                         </div>
                         <div class="col-md-4">
                             <ul class="conta_icon d_none1">
-                                @if(Context.Session.GetInt32("Id") == null)
+                                @if (!string.IsNullOrEmpty(Context.Session.GetString("UserName")))
+                                {
+                                    <li><a href="#" class="order">@Context.Session.GetString("UserName")</a> </li>
+                                }
+                                else
                                 {
                                     <li><a asp-action="Login" class="order">Login</a> </li>
                                     <li><a asp-action="SignupCustomer" class="order">Signup as Customer</a> </li>
                                     <li><a asp-action="SignupSeller" class="order">Signup as Seller</a> </li>
-                                }
-                                else
-                                {
-                                    <li><a href="#" class="order">@Context.Session.GetString("UserName")</a> </li>
                                 }
                             </ul>
                         </div>
@@ -88,22 +93,22 @@
                                     <ul class="navbar-nav mr-auto">
 
                                         <li class="nav-item">
-                                            <a class="nav-link" href="about.html">About</a>
+                                            <a class="nav-link" asp-action="AboutUs">About</a>
                                         </li>
                                         <li class="nav-item active">
-                                            <a class="nav-link" href="index.html">Home</a>
+                                            <a class="nav-link" asp-action="index">Home</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="fashion.html">Fashion</a>
+                                            <a class="nav-link" asp-action="ProductList" asp-route-id="1">Fashion</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="Food.html">Food</a>
+                                            <a class="nav-link" asp-action="ProductList" asp-route-id="2">Food</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="news.html">News</a>
+                                            <a class="nav-link" asp-action="ProductList" asp-route-id="3">News</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" href="contact.html">Contact Us</a>
+                                            <a class="nav-link" asp-action="ContactUs">Contact Us</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -144,6 +149,35 @@
     <!-- sidebar -->
     <script src="~/asset/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="~/asset/js/custom.js"></script>
+    <script>
+        $(function () {
+
+            //$('#cartcount').html(localStorage.getItem('count'));
+
+            //$('.addtocart').click(function () {
+
+            //    var sumid = $(this).data('pid').toString();
+            //    if (localStorage.getItem('pid') === null) {
+            //        localStorage.setItem('pid', sumid);
+            //        localStorage.setItem('count', 1);
+            //        location.reload();
+            //    }
+            //    else {
+            //        const arr = localStorage.getItem('pid').split(",")
+            //        if (arr.includes(sumid)) {
+            //            alert("Product already added to cart!!!");
+            //        }
+            //        else {
+            //            localStorage.setItem('pid', localStorage.getItem('pid').concat(",", sumid));
+            //            var counts = parseInt(localStorage.getItem('count'));
+            //            localStorage.setItem('count', ++counts);
+            //            location.reload();
+            //        }
+            //    }
+
+            //});
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

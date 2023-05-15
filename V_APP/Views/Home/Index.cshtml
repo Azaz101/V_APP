@@ -1,4 +1,7 @@
-﻿<div class="banner_main">
+﻿@{
+    var Top = ViewBag.TopProduct;
+}
+<div class="banner_main">
     <div class="container">
         <div class="row">
             <div class="col-md-8">
@@ -10,7 +13,7 @@
             </div>
             <div class="col-md-4">
                 <div class="ban_img">
-                    <figure><img src="images/ban_img.png" alt="#" /></figure>
+                    <figure><img src="~/asset/images/ban_img.png" alt="#" /></figure>
                 </div>
             </div>
         </div>
@@ -23,37 +26,37 @@
         <div class="row">
             <div class="col-md-2 col-sm-4 pa_left">
                 <div class="six_probpx yellow_bg">
-                    <i><img src="images/shoes.png" alt="#" /></i>
+                    <i><img src="~/asset/images/shoes.png" alt="#" /></i>
                     <span>Shoes</span>
                 </div>
             </div>
             <div class="col-md-2 col-sm-4 pa_left">
                 <div class="six_probpx bluedark_bg">
-                    <i><img src="images/underwear.png" alt="#" /></i>
+                    <i><img src="~/asset/images/underwear.png" alt="#" /></i>
                     <span>underwear</span>
                 </div>
             </div>
             <div class="col-md-2 col-sm-4 pa_left">
                 <div class="six_probpx yellow_bg">
-                    <i><img src="images/pent.png" alt="#" /></i>
+                    <i><img src="~/asset/images/pent.png" alt="#" /></i>
                     <span>Pante & socks</span>
                 </div>
             </div>
             <div class="col-md-2 col-sm-4 pa_left">
                 <div class="six_probpx bluedark_bg">
-                    <i><img src="images/t_shart.png" alt="#" /></i>
+                    <i><img src="~/asset/images/t_shart.png" alt="#" /></i>
                     <span>T-shirt & tankstop</span>
                 </div>
             </div>
             <div class="col-md-2 col-sm-4 pa_left">
                 <div class="six_probpx yellow_bg">
-                    <i><img src="images/jakit.png" alt="#" /></i>
+                    <i><img src="~/asset/images/jakit.png" alt="#" /></i>
                     <span>cardigans & jumpers</span>
                 </div>
             </div>
             <div class="col-md-2 col-sm-4 pa_left">
                 <div class="six_probpx bluedark_bg">
-                    <i><img src="images/helbet.png" alt="#" /></i>
+                    <i><img src="~/asset/images/helbet.png" alt="#" /></i>
                     <span>Top & hat</span>
                 </div>
             </div>
@@ -73,78 +76,24 @@
         </div>
         <div class="row">
             <div class="product_main">
+                @foreach (var P in Top)
+                {
+                    <div class="project_box ">
+                        @if (string.IsNullOrEmpty(P.Image))
+                        {
+                            <div class="dark_white_bg">
+                                <img src="/data/placeholder.jpg" alt="" />
+                            </div>
+                        }
+                        else
+                        {
+                            string[] All = P.Image.Split(',');
+                            <a href="/home/productdetail?id=@P.Id"><div class="dark_white_bg"><img src="@All[0]" alt="#" /></div></a>
+                            <p>@P.Name<br><strong>Rs.</strong> @P.Price</p>
+                        }
 
-                <div class="project_box ">
-                    <div class="dark_white_bg"><img src="images/shoes1.png" alt="#" /></div>
-                    <h3>White Sneakers $120.00</h3>
-                </div>
-
-
-                <div class="project_box ">
-                    <div class="dark_white_bg"><img src="images/shoes2.png" alt="#" /></div>
-                    <h3>Trending Shoes $80.00</h3>
-                </div>
-
-                <div class="project_box">
-                    <div class="dark_white_bg"><img src="images/shoes3.png" alt="#" /></div>
-                    <h3>Trending Sneakers $110.00</h3>
-                </div>
-
-                <div class="project_box">
-                    <div class="dark_white_bg"><img src="images/shoes4.png" alt="#" /></div>
-                    <h3>Classic Men Collection $100.00</h3>
-                </div>
-
-                <div class="project_box">
-                    <div class="dark_white_bg"><img src="images/shoes5.png" alt="#" /></div>
-                    <h3>White Joggers $200.00</h3>
-                </div>
-
-
-                <div class="project_box ">
-                    <div class="dark_white_bg"><img src="images/tisat1.png" alt="#" /></div>
-                    <h3>MEN T-Shirt $120.00</h3>
-                </div>
-
-                <div class="project_box ">
-                    <div class="dark_white_bg"><img src="images/tisat2.png" alt="#" /></div>
-                    <h3>T-Shirt  $120.00</h3>
-                </div>
-
-                <div class="project_box">
-                    <div class="dark_white_bg"><img src="images/tisat3.png" alt="#" /></div>
-                    <h3>MEN T-Shirt  $120.00</h3>
-                </div>
-
-                <div class="project_box">
-                    <div class="dark_white_bg"><img src="images/tisat4.png" alt="#" /></div>
-                    <h3>MEN T-Shirt  $120.00</h3>
-                </div>
-
-                <div class="project_box">
-                    <div class="dark_white_bg"><img src="images/tisat5.png" alt="#" /></div>
-                    <h3>MEN Shirts  $120.00</h3>
-                </div>
-
-
-                <div class="project_box ">
-                    <div class="dark_white_bg"><img src="images/mix1.png" alt="#" /></div>
-                    <h3>Smart Phone $1100.00</h3>
-                </div>
-
-                <div class="project_box ">
-                    <div class="dark_white_bg"><img src="images/mix2.png" alt="#" /></div>
-                    <h3>Black glasses $120.00</h3>
-                </div>
-
-
-                <div class="project_box">
-                    <div class="dark_white_bg"><img src="images/mix4.png" alt="#" /></div>
-                    <h3>Watch Collection $40.00</h3>
-                </div>
-
-
-
+                    </div>
+                }
                 <div class="col-md-12">
                     <a class="read_more" href="#">See More</a>
                 </div>
@@ -155,7 +104,7 @@
 <!-- end project section -->
 <!-- fashion section -->
 <div class="fashion">
-    <img src="images/fashion.jpg" alt="#" />
+    <img src="~/asset/images/fashion.jpg" alt="#" />
 </div>
 <!-- end fashion section -->
 <!-- news section -->
@@ -166,7 +115,7 @@
                 <div class="row d_flex">
                     <div class="col-md-5">
                         <div class="news_img">
-                            <figure><img src="images/news_img1.png"></figure>
+                            <figure><img src="~/asset/images/news_img1.png"></figure>
                         </div>
                     </div>
                     <div class="col-md-7">
@@ -185,7 +134,7 @@
                 <div class="row d_flex">
                     <div class="col-md-5">
                         <div class="news_img">
-                            <figure><img src="images/news_img2.jpg"></figure>
+                            <figure><img src="~/asset/images/news_img2.jpg"></figure>
                         </div>
                     </div>
                     <div class="col-md-7">
@@ -204,7 +153,7 @@
                 <div class="row d_flex">
                     <div class="col-md-5">
                         <div class="news_img">
-                            <figure><img src="images/news_img3.png"></figure>
+                            <figure><img src="~/asset/images/news_img3.png"></figure>
                         </div>
                     </div>
                     <div class="col-md-7">

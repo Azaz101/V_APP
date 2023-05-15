@@ -28,6 +28,7 @@ namespace V_APP.Models
         public virtual DbSet<Seller> Sellers { get; set; } = null!;
         public virtual DbSet<Subscriber> Subscribers { get; set; } = null!;
         public virtual DbSet<SystemUser> SystemUsers { get; set; } = null!;
+        public virtual DbSet<TopCategory> TopCategories { get; set; } = null!;
         public virtual DbSet<Wishlist> Wishlists { get; set; } = null!;
         public virtual DbSet<staff> staff { get; set; } = null!;
 
@@ -104,7 +105,9 @@ namespace V_APP.Models
                     .HasMaxLength(75)
                     .HasColumnName("description");
 
-                entity.Property(e => e.Image).HasColumnName("image");
+                entity.Property(e => e.Image)
+                    .HasMaxLength(250)
+                    .HasColumnName("image");
 
                 entity.Property(e => e.MetaData).HasColumnName("meta_data");
 
@@ -123,6 +126,8 @@ namespace V_APP.Models
                 entity.Property(e => e.SeoData).HasColumnName("seo_data");
 
                 entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.TopCategoryId).HasColumnName("top_category_id");
             });
 
             modelBuilder.Entity<Customer>(entity =>
@@ -444,6 +449,8 @@ namespace V_APP.Models
                     .HasColumnName("short_description");
 
                 entity.Property(e => e.Status).HasColumnName("status");
+
+                entity.Property(e => e.TopCategoryId).HasColumnName("top_category_id");
             });
 
             modelBuilder.Entity<Rating>(entity =>
@@ -636,6 +643,41 @@ namespace V_APP.Models
                 entity.Property(e => e.UserName)
                     .HasMaxLength(50)
                     .HasColumnName("user_name");
+            });
+
+            modelBuilder.Entity<TopCategory>(entity =>
+            {
+                entity.ToTable("top_category");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("created_by");
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("date")
+                    .HasColumnName("created_date");
+
+                entity.Property(e => e.Image)
+                    .HasMaxLength(250)
+                    .HasColumnName("image");
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .HasColumnName("modified_by");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnType("date")
+                    .HasColumnName("modified_date");
+
+                entity.Property(e => e.Name)
+                    .HasMaxLength(50)
+                    .HasColumnName("name");
+
+                entity.Property(e => e.Status).HasColumnName("status");
             });
 
             modelBuilder.Entity<Wishlist>(entity =>

@@ -19,6 +19,13 @@
             public static int Seller = 2;
             public static int Staff = 3;
         }
+        public class CategoryType
+        {
+            public static int LifeStyle = 1;
+            public static int Food = 2;
+            public static int News = 3;
+            public static int Trending = 4;
+        }
         public class api
         {
             public static string Api = "";

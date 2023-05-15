@@ -1,10 +1,10 @@
-﻿@model IEnumerable<V_APP.Models.Product>
+﻿@model IEnumerable<V_APP.Models.TopCategory>
 <div class="blue_bg">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="titlepage">
-                    <h2>Featured Products</h2>
+                    <h2>Top Categories</h2>
                 </div>
             </div>
         </div>
@@ -13,11 +13,6 @@
 <!-- project section -->
 <div id="project" class="project">
     <div class="container">
-        <div class="container mb-3">
-            <a asp-action="AddProduct">Add new Product.</a>
-        </div>
-        
-
         <div class="row">
             <div class="product_main">
                 @foreach (var P in Model)
@@ -25,17 +20,16 @@
                     <div class="project_box ">
                         @if (string.IsNullOrEmpty(P.Image))
                         {
-                        <div class="dark_white_bg">
-                            <img src="/data/placeholder.jpg"alt="" />
-                        </div>
+                            <div class="dark_white_bg">
+                                <img src="/data/placeholder.jpg" alt="" />
+                            </div>
                         }
                         else
                         {
-                            string[] All = P.Image.Split(',');
-                        <a href="/home/productdetail?id=@P.Id"><div class="dark_white_bg"><img src="@All[0]" alt="#" /></div></a>
-                            <p>@P.Name<br><strong>Rs.</strong> @P.Price</p>
+                            <a href="/home/Categories?id=@P.Id"><div class="dark_white_bg"><img src="@P.Image" alt="#" /></div></a>
+                            <p>@P.Name</p>
                         }
-                        
+
                     </div>
                 }
 

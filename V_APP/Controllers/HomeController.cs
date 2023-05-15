@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.IO.Pipes;
 using System.Net.Mail;
+using static Humanizer.In;
+using System.Reflection.Metadata.Ecma335;
 
 namespace V_APP.Controllers
 {
@@ -21,8 +23,39 @@ namespace V_APP.Controllers
             _dbContext = dbContext;
             _he = he;
         }
-		#region Static
-		[HttpGet]
+        #region Static
+        
+        public IActionResult Index()
+        {
+            ViewBag.TopProduct = _dbContext.Products.Take(10).ToList();
+            return View();
+        }
+
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
+
+        public IActionResult ContactUs()
+        {
+            return View();
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+        public IActionResult Notfound()
+        {
+            return View();
+        }
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction(nameof(Login));
+        }
+
+        [HttpGet]
 		public IActionResult Login()
 		{
 			return View();
@@ -76,21 +109,6 @@ namespace V_APP.Controllers
 			}
 			return RedirectToAction(nameof(Index));
 		}
-		public IActionResult Logout()
-		{
-			HttpContext.Session.Clear();
-			return RedirectToAction(nameof(Login));
-		}
-		public IActionResult Index()
-
-		{
-			return View();
-		}
-
-		public IActionResult Privacy()
-		{
-			return View();
-		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
@@ -98,6 +116,8 @@ namespace V_APP.Controllers
 			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
 		}
 		#endregion
+
+
 		#region Customer
 		[HttpGet]
 		public IActionResult SignupCustomer()
@@ -146,6 +166,8 @@ namespace V_APP.Controllers
 			return RedirectToAction(nameof(Login));
 		}
 		#endregion
+
+
 		#region Seller
 		[HttpGet]
         public IActionResult SignupSeller()
@@ -197,33 +219,42 @@ namespace V_APP.Controllers
 			return RedirectToAction(nameof(Login));
         }
 		#endregion
+
+
 		#region Product
 		[HttpGet]
-		public IActionResult AddUpdateProduct(int? id)
+		public IActionResult AddProduct()
 		{
-			if (id != 0)
-			{
-				var list = _dbContext.Products.Find(id);
-				return View(list);
-			}
 			return View();
 		}
 		[HttpPost]
-		public IActionResult AddUpdateProduct(Product product, IFormFile? img)
+        [ValidateAntiForgeryToken]
+        public IActionResult AddProduct(Product product, IList<IFormFile>? img)
 		{
-			if (product.Id == 0)
+			//if (ModelState.IsValid)
 			{
 				//to add image and its address
-				if (img != null)
+				if (img != null && img.Count > 0)
 				{
-					string FinalFilePathVirtual = "/data/" + Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
-
-					using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
+					string Final = "";
+					foreach (var pics in img)
 					{
-						img.CopyTo(FS);
+						string FinalFilePathVirtual = "/data/" + Guid.NewGuid().ToString() + Path.GetExtension(pics.FileName);
+
+						using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
+						{
+							pics.CopyTo(FS);
+						}
+						Final = Final + ',' + FinalFilePathVirtual;
 					}
-					product.Image = FinalFilePathVirtual;
+					if (Final.StartsWith(','))
+					{
+						Final = Final.Remove(0, 1);
+					}
+					product.Image = Final;
 				}
+				var cat = _dbContext.Categories.Where(c => c.Id == product.CategoryId).FirstOrDefault();
+				product.TopCategoryId = cat.TopCategoryId;
 				product.SellerId = HttpContext.Session.GetInt32("Id");
 				product.NoOfView = 0;
 				product.CreatedDate = DateTime.Now;
@@ -231,33 +262,63 @@ namespace V_APP.Controllers
 				_dbContext.Products.Add(product);
 				_dbContext.SaveChanges();
 				TempData["message"] = "Product " + Constants.Message.AddMessage;
+				return RedirectToAction(nameof(ProductList));
 			}
-			else
-			{
-				var model = _dbContext.Products.Where(m => m.Id == product.Id).FirstOrDefault();
-				if (model != null)
-				{
-					//to update image and its address
-					if (img != null)
-					{
-						string FinalFilePathVirtual = "/data/" + Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
-
-						using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
-						{
-							img.CopyTo(FS);
-						}
-						product.Image = FinalFilePathVirtual;
-					}
-					model.ModifiedDate = DateTime.Now;
-					_dbContext.Products.Update(product);
-					_dbContext.SaveChanges();
-				}
-			}
-			return RedirectToAction(nameof(ProductList));
+			return View();
 		}
-		[HttpGet]
-		public IActionResult ProductList()
+        [HttpGet]
+        public IActionResult UpdateProduct(int id)
+        {
+            var prod = _dbContext.Products.Find(id);
+            if (prod != null)
+            {
+                return View(prod);
+            }
+            return RedirectToAction(nameof(Notfound));
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult UpdateProduct(Product product, IList<IFormFile>? img)
+        {
+            //if (ModelState.IsValid)
+            {
+                //to update image and its address
+                if (img != null && img.Count > 0)
+                {
+                    string Final = "";
+                    foreach (var pics in img)
+                    {
+                        string FinalFilePathVirtual = "/data/" + Guid.NewGuid().ToString() + Path.GetExtension(pics.FileName);
+
+                        using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
+                        {
+                            pics.CopyTo(FS);
+                        }
+                        Final = Final + ',' + FinalFilePathVirtual;
+                    }
+                    if (Final.StartsWith(','))
+                    {
+                        Final = Final.Remove(0, 1);
+                    }
+                    product.Image = Final;
+                }
+                product.ModifiedDate = DateTime.Now;
+				product.ModifiedBy = HttpContext.Session.GetString("FirstName") + HttpContext.Session.GetString("LastName");
+                _dbContext.Products.Update(product);
+                _dbContext.SaveChanges();
+				TempData["message"] = "Product " + Constants.Message.UpdateMessage;
+			    return RedirectToAction(nameof(ProductList));
+            }
+            return View();
+        }
+        [HttpGet]
+		public IActionResult ProductList(int? id)
 		{
+			if(id != null)
+			{
+                var cat = _dbContext.Products.Where(p => p.TopCategoryId == id).ToList();
+                return View(cat);
+            }
 			var list = _dbContext.Products.ToList();
 			return View(list);
 		}
@@ -269,11 +330,169 @@ namespace V_APP.Controllers
         public IActionResult DeleteProduct(int id)
         {
 			var list = _dbContext.Products.Find(id);
-			_dbContext.Products.Remove(list);
-			_dbContext.SaveChanges();
-            return RedirectToAction(nameof(ProductList));
+			if(list != null)
+            {
+				_dbContext.Products.Remove(list);
+				_dbContext.SaveChanges();
+				return RedirectToAction(nameof(ProductList));
+			}
+            return RedirectToAction(nameof(Notfound));
         }
         #endregion
 
+        #region TopCategory
+        [HttpGet]
+		public IActionResult AddTopCategory()
+		{
+			return View();
+		}
+        [HttpPost]
+		public IActionResult AddTopCategory(TopCategory topCategory, IFormFile? img)
+		{
+			if (img != null)
+			{
+				string FinalFilePathVirtual = "/data/" + Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
+
+				using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
+				{
+					img.CopyTo(FS);
+				}
+				topCategory.Image = FinalFilePathVirtual;
+			}
+			topCategory.CreatedDate = DateTime.Now;
+			topCategory.CreatedBy = HttpContext.Session.GetString("FirstName") + HttpContext.Session.GetString("LasttName");
+			_dbContext.TopCategories.Add(topCategory);
+			_dbContext.SaveChanges();
+			return View(nameof(TopCategoryList));
+		}
+		[HttpGet]
+		public IActionResult UpdateTopCategory(int id)
+		{
+			var cat = _dbContext.TopCategories.Find(id);
+			if(cat != null)
+			{
+				return View(cat);
+			}
+			
+			return RedirectToAction(nameof(Notfound));
+		}
+		[HttpPost]
+		public IActionResult UpdateTopCategory(TopCategory topCategory, IFormFile? img)
+		{
+			if (img != null)
+			{
+				string FinalFilePathVirtual = "/data/" + Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
+
+				using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
+				{
+					img.CopyTo(FS);
+				}
+				topCategory.Image = FinalFilePathVirtual;
+			}
+			topCategory.ModifiedDate	 = DateTime.Now;
+			topCategory.ModifiedBy = HttpContext.Session.GetString("FirstName") + HttpContext.Session.GetString("LasttName");
+			_dbContext.TopCategories.Update(topCategory);
+			_dbContext.SaveChanges();
+			return View(nameof(TopCategoryList));
+		}
+		public IActionResult TopCategoryList()
+		{
+			return View(_dbContext.TopCategories.ToList());
+		}
+		public IActionResult DeleteTopCategory(int id)
+		{
+			var top = _dbContext.TopCategories.Find(id);
+			if (top != null)
+			{
+				_dbContext.TopCategories.Remove(top);
+				_dbContext.SaveChanges();
+				return View(nameof(ProductList));
+			}
+			return View(nameof(Notfound));
+		}
+
+		#endregion
+
+		#region Category
+
+		[HttpGet]
+        public IActionResult AddCategory()
+		{
+            return View();
+        }
+		[HttpPost]
+		public IActionResult AddCategory(Category category, IFormFile? img)
+		{
+			//to add image and its address
+			if (img != null)
+			{
+				string FinalFilePathVirtual = "/data/" + Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
+
+				using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
+				{
+					img.CopyTo(FS);
+				}
+				category.Image = FinalFilePathVirtual;
+			}
+			category.CreatedDate = DateTime.Now;
+			category.CreatedBy = HttpContext.Session.GetString("FirstName") + HttpContext.Session.GetString("LastName");
+			_dbContext.Categories.Add(category);
+			_dbContext.SaveChanges();
+			TempData["message"] = "Category " + Constants.Message.AddMessage;
+			return RedirectToAction(nameof(CategoryList));
+		}
+		[HttpGet]
+		public IActionResult UpdateCategory(int id)
+		{
+			var cat = _dbContext.Products.Find(id);
+			if (cat != null)
+			{
+				return View(cat);
+			}
+			return RedirectToAction(nameof(Notfound));
+		}
+		[HttpPost]
+        public IActionResult UpdateCategory(Category category, IFormFile? img)
+        {
+            //to add image and its address
+            if (img != null)
+            {
+                string FinalFilePathVirtual = "/data/" + Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
+
+                using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
+                {
+                    img.CopyTo(FS);
+                }
+                category.Image = FinalFilePathVirtual;
+            }
+            category.ModifiedDate = DateTime.Now;
+            category.ModifiedBy = HttpContext.Session.GetString("FirstName") + HttpContext.Session.GetString("LastName");
+            _dbContext.Categories.Update(category);
+            _dbContext.SaveChanges();
+            TempData["message"] = "Categoty " + Constants.Message.UpdateMessage;
+			return RedirectToAction(nameof(CategoryList));
+        }
+        [HttpGet]
+        public IActionResult CategoryList(int? id)
+        {
+			var list = _dbContext.Categories.Where(c => c.TopCategoryId == id).ToList();
+            if(list != null)
+			{
+				return View(list);
+			}
+			return View(_dbContext.Categories.ToList());
+        }
+		public IActionResult DeleteCategory(int id)
+		{
+			var cat = _dbContext.Categories.Find(id);
+			if (cat != null)
+			{
+				_dbContext.Categories.Remove(cat);
+				_dbContext.SaveChanges();
+				return RedirectToAction(nameof(ProductList));
+			}
+			return RedirectToAction(nameof(Notfound));
+        }
+        #endregion
     }
 }
