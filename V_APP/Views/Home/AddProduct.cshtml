@@ -1,6 +1,7 @@
 ﻿@model V_APP.Models.Product
 @{
 	Layout = "_Layout2";
+	var Cat = ViewBag.Category;
 }
 <div class="login_page_iiner302">
 	<div class="row">
@@ -17,7 +18,13 @@
 						<div class="col-lg-6">
 							<div class="form-group">
 								<label asp-for="CategoryId">Product Category</label>
-								<input asp-for="CategoryId" type="text" class="form-control" required />
+								<select asp-for="CategoryId" class="form-control" required>
+									<option value="">Select Top Category</option>
+									@foreach (var C in Cat)
+									{
+										<option value="@C.Id">@C.Name</option>
+									}
+								</select>
 							</div>
 						</div>
 					</div>

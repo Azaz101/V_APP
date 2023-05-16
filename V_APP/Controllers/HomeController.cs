@@ -8,6 +8,8 @@ using System.IO.Pipes;
 using System.Net.Mail;
 using static Humanizer.In;
 using System.Reflection.Metadata.Ecma335;
+using System.Reflection.Metadata;
+using System.Linq;
 
 namespace V_APP.Controllers
 {
@@ -49,7 +51,11 @@ namespace V_APP.Controllers
         {
             return View();
         }
-        public IActionResult Logout()
+		public IActionResult CantAccess()
+		{
+			return View();
+		}
+		public IActionResult Logout()
         {
             HttpContext.Session.Clear();
             return RedirectToAction(nameof(Login));
@@ -225,6 +231,11 @@ namespace V_APP.Controllers
 		[HttpGet]
 		public IActionResult AddProduct()
 		{
+            if (HttpContext.Session.GetInt32("UserType") != Helper.Constants.Type.Seller)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            ViewBag.Category = _dbContext.Categories.ToList();
 			return View();
 		}
 		[HttpPost]
@@ -272,7 +283,8 @@ namespace V_APP.Controllers
             var prod = _dbContext.Products.Find(id);
             if (prod != null)
             {
-                return View(prod);
+				ViewBag.Category = _dbContext.Categories.ToList();
+				return View(prod);
             }
             return RedirectToAction(nameof(Notfound));
         }
@@ -302,6 +314,8 @@ namespace V_APP.Controllers
                     }
                     product.Image = Final;
                 }
+                var cat = _dbContext.Categories.Where(c => c.Id == product.CategoryId).FirstOrDefault();
+                product.TopCategoryId = cat.TopCategoryId;
                 product.ModifiedDate = DateTime.Now;
 				product.ModifiedBy = HttpContext.Session.GetString("FirstName") + HttpContext.Session.GetString("LastName");
                 _dbContext.Products.Update(product);
@@ -317,6 +331,8 @@ namespace V_APP.Controllers
 			if(id != null)
 			{
                 var cat = _dbContext.Products.Where(p => p.TopCategoryId == id).ToList();
+				var T = _dbContext.TopCategories.Where(c => c.Id == id).FirstOrDefault();
+				ViewBag.Title = T.Name;
                 return View(cat);
             }
 			var list = _dbContext.Products.ToList();
@@ -363,7 +379,7 @@ namespace V_APP.Controllers
 			topCategory.CreatedBy = HttpContext.Session.GetString("FirstName") + HttpContext.Session.GetString("LasttName");
 			_dbContext.TopCategories.Add(topCategory);
 			_dbContext.SaveChanges();
-			return View(nameof(TopCategoryList));
+			return RedirectToAction(nameof(TopCategoryList));
 		}
 		[HttpGet]
 		public IActionResult UpdateTopCategory(int id)
@@ -393,7 +409,7 @@ namespace V_APP.Controllers
 			topCategory.ModifiedBy = HttpContext.Session.GetString("FirstName") + HttpContext.Session.GetString("LasttName");
 			_dbContext.TopCategories.Update(topCategory);
 			_dbContext.SaveChanges();
-			return View(nameof(TopCategoryList));
+			return RedirectToAction(nameof(TopCategoryList));
 		}
 		public IActionResult TopCategoryList()
 		{
@@ -418,7 +434,8 @@ namespace V_APP.Controllers
 		[HttpGet]
         public IActionResult AddCategory()
 		{
-            return View();
+            ViewBag.TopCategory = _dbContext.TopCategories.ToList();
+			return View();
         }
 		[HttpPost]
 		public IActionResult AddCategory(Category category, IFormFile? img)
@@ -444,9 +461,10 @@ namespace V_APP.Controllers
 		[HttpGet]
 		public IActionResult UpdateCategory(int id)
 		{
-			var cat = _dbContext.Products.Find(id);
+			var cat = _dbContext.Categories.Find(id);
 			if (cat != null)
 			{
+				ViewBag.TopCategory = _dbContext.TopCategories.ToList();
 				return View(cat);
 			}
 			return RedirectToAction(nameof(Notfound));
@@ -476,7 +494,7 @@ namespace V_APP.Controllers
         public IActionResult CategoryList(int? id)
         {
 			var list = _dbContext.Categories.Where(c => c.TopCategoryId == id).ToList();
-            if(list != null)
+            if(id != null && list != null)
 			{
 				return View(list);
 			}

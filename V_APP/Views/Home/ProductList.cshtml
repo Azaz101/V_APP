@@ -1,10 +1,21 @@
 ﻿@model IEnumerable<V_APP.Models.Product>
+@{
+    var T = ViewBag.Title;
+}
 <div class="blue_bg">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="titlepage">
-                    <h2>Featured Products</h2>
+                    @if(T != null)
+                    {
+                        <h2>@ViewBag.Title</h2>
+                    }
+                    else
+                    {
+                        <h2>All Products</h2>
+                    }
+                    
                 </div>
             </div>
         </div>
@@ -13,9 +24,13 @@
 <!-- project section -->
 <div id="project" class="project">
     <div class="container">
-        <div class="container mb-3">
-            <a asp-action="AddProduct">Add new Product.</a>
-        </div>
+        @if(Context.Session.GetInt32("UserType") == 2)
+        {
+            <div class="container mb-3">
+                <a asp-action="AddProduct">Add new Product.</a>
+            </div>
+        }
+
         
 
         <div class="row">
