@@ -1,10 +1,10 @@
-﻿@model IEnumerable<V_APP.Models.TopCategory>
+﻿@model IEnumerable<V_APP.Models.staff>
 <div class="blue_bg">
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="titlepage">
-                    <h2>Top Categories</h2>
+                    <h2>Staff List</h2>
                 </div>
             </div>
         </div>
@@ -20,14 +20,13 @@
                     <div class="project_box ">
                         @if (string.IsNullOrEmpty(P.Image))
                         {
-                            <div class="dark_white_bg">
-                                <img src="/data/placeholder.jpg" alt="" />
-                            </div>
+                            <a href="/home/StaffDetail?id=@P.Id"><div class="dark_white_bg"><img src="/data/placeholder.jpg" alt="" /></div></a>
+                            <p>@P.FirstName @P.LastName</p>
                         }
                         else
                         {
-                            <a href="/home/TopCategoryDetail?id=@P.Id"><div class="dark_white_bg"><img src="@P.Image" alt="#" /></div></a>
-                            <p>@P.Name</p>
+                            <a href="/home/StaffDetail?id=@P.Id"><div class="dark_white_bg"><img src="@P.Image" alt="#" /></div></a>
+                            <p>@P.FirstName @P.LastName</p>
                         }
 
                     </div>

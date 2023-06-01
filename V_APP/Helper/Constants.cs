@@ -14,10 +14,10 @@
         }
         public class Type
         {
-            public static int SystemUser = 4;
             public static int Customer = 1;
             public static int Seller = 2;
             public static int Staff = 3;
+            public static int Admin = 4;
         }
         public class CategoryType
         {

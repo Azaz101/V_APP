@@ -52,23 +52,24 @@
                     <div class="row d_flex">
                         <div class="col-md-4">
                             <ul class="right_icon d_none1">
-                                <li><a asp-action="Index"><img src="~/asset/images/shopping.png" alt="#" />
-                                        @*<span class="position-absolute top-0 badge rounded-pill bg-danger" id="cartcount">
+                                <li>
+                                    <span class="position-absolute top-0 badge rounded-pill bg-danger" id="cartcount">
                                             <span class="visually-hidden"></span>
-                                        </span>*@
+                                        </span>
+                                    <a asp-action="Index"><img src="~/asset/images/shopping.png" alt="#" />
                                     </a>
                                 </li>
                                 <li><a href="#" class="order">Order Now</a> </li>
                             </ul>
                         </div>
                         <div class="col-md-4">
-                            <a class="logo" href="#"><img src="~/asset/images/logo.jpg" alt="#" /></a>
+                            <a class="logo" asp-action="index"><img src="~/asset/images/logo.jpg" alt="#" /></a>
                         </div>
                         <div class="col-md-4">
                             <ul class="conta_icon d_none1">
                                 @if (!string.IsNullOrEmpty(Context.Session.GetString("UserName")))
                                 {
-                                    <li><a href="#" class="order">@Context.Session.GetString("UserName")</a> </li>
+                                    <li><a asp-action="Logout" class="order">@Context.Session.GetString("UserName")</a> </li>
                                 }
                                 else
                                 {
@@ -90,8 +91,56 @@
                                     <span class="navbar-toggler-icon"></span>
                                 </button>
                                 <div class="collapse navbar-collapse" id="navbarsExample04">
-                                    <ul class="navbar-nav mr-auto">
+                                    @if (Context.Session.GetInt32("UserType") == 3 || Context.Session.GetInt32("UserType") == 4)
+                                    {
+                                        <ul class="navbar-nav mr-auto">
 
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-action="CategoryList">Category</a>
+                                        </li>
+                                        <li class="nav-item active">
+                                            <a class="nav-link" asp-action="TopCategoryList">TopCategory</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-action="ProductList">Products</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-action="SellerList">Seller</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-action="CustomerList">Customer</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" asp-action="StaffList">Staff</a>
+                                        </li>
+                                        </ul>
+                                    }
+                                    else if (Context.Session.GetInt32("UserType") == 2)
+                                    {
+                                        <ul class="navbar-nav mr-auto">
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-action="AboutUs">About</a>
+                                            </li>
+                                            <li class="nav-item active">
+                                                <a class="nav-link" asp-action="index">Home</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-action="ProductList" asp-route-id="1">Fashion</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-action="ProductList" asp-route-id="2">Food</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-action="ProductList" asp-route-id="3">Discount</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" asp-action="ContactUs">Contact Us</a>
+                                            </li>
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                    <ul class="navbar-nav mr-auto">
                                         <li class="nav-item">
                                             <a class="nav-link" asp-action="AboutUs">About</a>
                                         </li>
@@ -105,12 +154,13 @@
                                             <a class="nav-link" asp-action="ProductList" asp-route-id="2">Food</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link" asp-action="ProductList" asp-route-id="3">News</a>
+                                            <a class="nav-link" asp-action="ProductList" asp-route-id="3">Discount</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" asp-action="ContactUs">Contact Us</a>
                                         </li>
                                     </ul>
+                                    }
                                 </div>
                             </nav>
                         </div>
@@ -134,6 +184,43 @@
     </div>
 
     <footer class="border-top footer text-muted">
+        <div class="row">
+            <div class="col-md-12 col-lg-3">
+                <h4>About company</h4>
+                <p>Set up in 2009 we will likely make the way toward purchasing customized apparel as simple as conceivable while furnishing our Customers with the help and direction they need.</p>
+                <a href="/Home/AboutUs" class="a-white">More</a><br><br>
+                <p><i>Copyright ©2022 <a href="/home/index" class="a-white">V-App.</a> All Rights Reserved.</i></p>
+            </div>
+
+            <div class="col-lg-8 col-md-12 row">
+                <div class="col-6">
+                    <h4>Quick Links</h4>
+                    <a href="/Home/Privacy" class="a-white">Privacy Policy</a><br>
+                    <a href="/Home/Cookies" class="a-white">Cookies Policy</a><br>
+                    <a href="/Home/FAQ" class="a-white">FAQ's</a><br>
+                    <a href="/Home/ContactUs" class="a-white">Contact us</a><br>
+                </div>
+
+                <div class="col-6">
+                    <h4>Get Social</h4>
+                    <p>
+                        <a href="#" class="a-white" target="_blank"><i class="bi bi-facebook"> Facebook</i></a><br>
+                        <a href="#" class="a-white" target="_blank"><i class="bi bi-instagram"> Instagram</i></a><br>
+                        <a href="#" class="a-white" target="_blank"><i class="bi bi-whatsapp"> Whatsapp</i></a><br>
+                        <a href="#" class="a-white" target="_blank"><i class="bi bi-github"> Github</i></a><br>
+                    </p>
+                </div>
+                <div class="col-12">
+                    <h3>Newsletter</h3>
+                    <p>Sign up for our newsletter to receive our latest articles, news, and event announcements.</p>
+                    <form asp-controller="Subscribers" asp-action="Create" method="post">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                        <button type="submit" class="btn btn-sm btn-primary">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </div>
         <div class="container">
             &copy; 2023 - V_APP - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
@@ -152,30 +239,32 @@
     <script>
         $(function () {
 
-            //$('#cartcount').html(localStorage.getItem('count'));
+            //alert("HI");
 
-            //$('.addtocart').click(function () {
+            $('#cartcount').html(localStorage.getItem('count'));
 
-            //    var sumid = $(this).data('pid').toString();
-            //    if (localStorage.getItem('pid') === null) {
-            //        localStorage.setItem('pid', sumid);
-            //        localStorage.setItem('count', 1);
-            //        location.reload();
-            //    }
-            //    else {
-            //        const arr = localStorage.getItem('pid').split(",")
-            //        if (arr.includes(sumid)) {
-            //            alert("Product already added to cart!!!");
-            //        }
-            //        else {
-            //            localStorage.setItem('pid', localStorage.getItem('pid').concat(",", sumid));
-            //            var counts = parseInt(localStorage.getItem('count'));
-            //            localStorage.setItem('count', ++counts);
-            //            location.reload();
-            //        }
-            //    }
+            $('.addtocart').click(function () {
 
-            //});
+                var sumid = $(this).data('pid').toString();
+                if (localStorage.getItem('pid') === null) {
+                    localStorage.setItem('pid', sumid);
+                    localStorage.setItem('count', 1);
+                    location.reload();
+                }
+                else {
+                    const arr = localStorage.getItem('pid').split(",")
+                    if (arr.includes(sumid)) {
+                        alert("Product already added to cart!!!");
+                    }
+                    else {
+                        localStorage.setItem('pid', localStorage.getItem('pid').concat(",", sumid));
+                        var counts = parseInt(localStorage.getItem('count'));
+                        localStorage.setItem('count', ++counts);
+                        location.reload();
+                    }
+                }
+
+            });
         });
     </script>
     @await RenderSectionAsync("Scripts", required: false)

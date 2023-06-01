@@ -168,14 +168,24 @@ namespace V_APP.Controllers
 			_dbContext.Customers.Add(customer);
 			_dbContext.SaveChanges();
 
-			ViewBag.Success = "Registered Successfully.";
+            TempData["Success"] = "Registered Successfully.";
 			return RedirectToAction(nameof(Login));
 		}
-		#endregion
+        public IActionResult CustomerList()
+        {
+            return View(_dbContext.Customers.ToList());
+        }
+        public IActionResult CustomerDetail(int id)
+        {
+            var list = _dbContext.Customers.Where(u => u.Id == id).FirstOrDefault();
+            return View(list);
+        }
+
+        #endregion
 
 
-		#region Seller
-		[HttpGet]
+        #region Seller
+        [HttpGet]
         public IActionResult SignupSeller()
         {
             return View();
@@ -224,11 +234,93 @@ namespace V_APP.Controllers
             ViewBag.Success = "Registered Successfully.";
 			return RedirectToAction(nameof(Login));
         }
-		#endregion
+        public IActionResult SellerList()
+        {
+            return View(_dbContext.Sellers.ToList());
+        }
+        public IActionResult SellerDetail(int id)
+        {
+            var list = _dbContext.Sellers.Where(u => u.Id == id).FirstOrDefault();
+            return View(list);
+        }
+
+        #endregion
+
+        #region Staff
+        [HttpGet]
+        public IActionResult SignupStaff()
+        {
+            if (HttpContext.Session.GetInt32("UserType") != 4)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            return View();
+        }
+        [HttpPost]
+        public IActionResult SignupStaff(SignupStaff U)
+        {
+            SystemUser systemuser = new SystemUser();
+            systemuser.UserName = U.Username;
+            systemuser.Password = U.Password;
+            systemuser.Status = Constants.Status.Active;
+            systemuser.Type = 3;
+            _dbContext.SystemUsers.Add(systemuser);
+            _dbContext.SaveChanges();
+
+            //to add image and its address
+            //if (img != null)
+            //{
+            //	string FinalFilePathVirtual = "/data/student/pics/" + Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
+
+            //	using (FileStream FS = new FileStream(_he.WebRootPath + FinalFilePathVirtual, FileMode.Create))
+            //	{
+            //		img.CopyTo(FS);
+            //	}
+            //	student.Images = FinalFilePathVirtual;
+            //}
+
+			
+			staff staff = new staff();
+            staff.SystemUserId = systemuser.Id;
+            staff.FirstName = U.FirstName;
+            staff.LastName = U.LastName;
+            staff.PhoneNumber = U.PhoneNumber;
+			staff.City = U.City;
+            staff.Address = U.Address;
+			staff.Email = U.Email;
+            staff.Dob = U.Dob;
+            staff.Status = Constants.Status.Active;
+            staff.CreatedDate = DateTime.Now;
+            staff.Status = Constants.Status.Active;
+            _dbContext.staff.Add(staff);
+            _dbContext.SaveChanges();
+
+            ViewBag.Success = "Registered Successfully.";
+            return RedirectToAction(nameof(Login));
+        }
+        public IActionResult StaffList()
+        {
+            if (HttpContext.Session.GetInt32("UserType") != 3 || HttpContext.Session.GetInt32("UserType") != 4)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            return View(_dbContext.staff.ToList());
+        }
+        public IActionResult StaffDetail(int id)
+        {
+            if (HttpContext.Session.GetInt32("UserType") != 3 || HttpContext.Session.GetInt32("UserType") != 4)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            var list = _dbContext.staff.Where(u => u.Id == id).FirstOrDefault();
+            return View(list);
+        }
+
+        #endregion
 
 
-		#region Product
-		[HttpGet]
+        #region Product
+        [HttpGet]
 		public IActionResult AddProduct()
 		{
             if (HttpContext.Session.GetInt32("UserType") != Helper.Constants.Type.Seller)
@@ -283,7 +375,11 @@ namespace V_APP.Controllers
             var prod = _dbContext.Products.Find(id);
             if (prod != null)
             {
-				ViewBag.Category = _dbContext.Categories.ToList();
+                if (HttpContext.Session.GetInt32("Id") != prod.SellerId || HttpContext.Session.GetInt32("UserType") != 3 || HttpContext.Session.GetInt32("UserType") != 4)
+                {
+                    return RedirectToAction(nameof(CantAccess));
+                }
+                ViewBag.Category = _dbContext.Categories.ToList();
 				return View(prod);
             }
             return RedirectToAction(nameof(Notfound));
@@ -348,7 +444,11 @@ namespace V_APP.Controllers
 			var list = _dbContext.Products.Find(id);
 			if(list != null)
             {
-				_dbContext.Products.Remove(list);
+                if (HttpContext.Session.GetInt32("Id") != list.SellerId || HttpContext.Session.GetInt32("UserType") != 4)
+                {
+                    return RedirectToAction(nameof(CantAccess));
+                }
+                _dbContext.Products.Remove(list);
 				_dbContext.SaveChanges();
 				return RedirectToAction(nameof(ProductList));
 			}
@@ -360,7 +460,11 @@ namespace V_APP.Controllers
         [HttpGet]
 		public IActionResult AddTopCategory()
 		{
-			return View();
+            if (HttpContext.Session.GetInt32("UserType") != 3 || HttpContext.Session.GetInt32("UserType") != 4)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            return View();
 		}
         [HttpPost]
 		public IActionResult AddTopCategory(TopCategory topCategory, IFormFile? img)
@@ -384,7 +488,11 @@ namespace V_APP.Controllers
 		[HttpGet]
 		public IActionResult UpdateTopCategory(int id)
 		{
-			var cat = _dbContext.TopCategories.Find(id);
+            if (HttpContext.Session.GetInt32("UserType") != 3 || HttpContext.Session.GetInt32("UserType") != 4)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            var cat = _dbContext.TopCategories.Find(id);
 			if(cat != null)
 			{
 				return View(cat);
@@ -413,16 +521,33 @@ namespace V_APP.Controllers
 		}
 		public IActionResult TopCategoryList()
 		{
-			return View(_dbContext.TopCategories.ToList());
+            if (HttpContext.Session.GetInt32("UserType") != 3 || HttpContext.Session.GetInt32("UserType") != 4)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            return View(_dbContext.TopCategories.ToList());
 		}
-		public IActionResult DeleteTopCategory(int id)
+        public IActionResult TopCategoryDetail(int id)
+        {
+            if (HttpContext.Session.GetInt32("UserType") != 3 || HttpContext.Session.GetInt32("UserType") != 4)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            var list = _dbContext.TopCategories.Where(u => u.Id == id).FirstOrDefault();
+            return View(list);
+        }
+        public IActionResult DeleteTopCategory(int id)
 		{
-			var top = _dbContext.TopCategories.Find(id);
+            if (HttpContext.Session.GetInt32("UserType") != 4)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            var top = _dbContext.TopCategories.Find(id);
 			if (top != null)
 			{
 				_dbContext.TopCategories.Remove(top);
 				_dbContext.SaveChanges();
-				return View(nameof(ProductList));
+				return View(nameof(TopCategoryList));
 			}
 			return View(nameof(Notfound));
 		}
@@ -434,6 +559,10 @@ namespace V_APP.Controllers
 		[HttpGet]
         public IActionResult AddCategory()
 		{
+            if (HttpContext.Session.GetInt32("UserType") != 3 || HttpContext.Session.GetInt32("UserType") != 4)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
             ViewBag.TopCategory = _dbContext.TopCategories.ToList();
 			return View();
         }
@@ -461,7 +590,11 @@ namespace V_APP.Controllers
 		[HttpGet]
 		public IActionResult UpdateCategory(int id)
 		{
-			var cat = _dbContext.Categories.Find(id);
+            if (HttpContext.Session.GetInt32("UserType") != 3 || HttpContext.Session.GetInt32("UserType") != 4)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            var cat = _dbContext.Categories.Find(id);
 			if (cat != null)
 			{
 				ViewBag.TopCategory = _dbContext.TopCategories.ToList();
@@ -500,16 +633,48 @@ namespace V_APP.Controllers
 			}
 			return View(_dbContext.Categories.ToList());
         }
-		public IActionResult DeleteCategory(int id)
+        public IActionResult CategoryDetail(int id)
+        {
+            var list = _dbContext.Categories.Where(u => u.Id == id).FirstOrDefault();
+            return View(list);
+        }
+        public IActionResult DeleteCategory(int id)
 		{
-			var cat = _dbContext.Categories.Find(id);
+            if (HttpContext.Session.GetInt32("UserType") != 4)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            var cat = _dbContext.Categories.Find(id);
 			if (cat != null)
 			{
 				_dbContext.Categories.Remove(cat);
 				_dbContext.SaveChanges();
-				return RedirectToAction(nameof(ProductList));
+				return RedirectToAction(nameof(CategoryList));
 			}
 			return RedirectToAction(nameof(Notfound));
+        }
+        #endregion
+        #region Discount
+        [HttpGet]
+        public IActionResult AddDiscount(int id)
+        {
+            if (HttpContext.Session.GetInt32("UserType") != 2)
+            {
+                return RedirectToAction(nameof(CantAccess));
+            }
+            var Prod = _dbContext.Products.Find(id);
+            if (Prod != null)
+            {
+                return View(Prod);
+            }
+            return RedirectToAction(nameof(Notfound));
+        }
+
+        [HttpPost]
+        public IActionResult AddDiscount(Discount D)
+        {
+            //Need to add dscount
+            return View();
         }
         #endregion
     }

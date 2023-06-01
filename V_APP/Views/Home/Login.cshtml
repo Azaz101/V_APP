@@ -1,13 +1,22 @@
 @model V_APP.DTOs.LoginModel
 @{
 	Layout = "_Layout2";
-	var success = ViewBag.Success;
+	var success = TempData["Success"];
 	var invalid = ViewBag.Error;
 }
 <div class="login_page_iiner302">
 	<div class="row">
 	    <div class="col-lg-12">
 	    	<div class="login_page_inner">
+			@if (invalid != null)
+			{
+				<h5 class="text-center alert alert-danger">@ViewBag.Error</h5>
+			}
+
+			@if (success != null)
+			{
+				<h5 class="text-center alert alert-success">@TempData["Success"]</h5>
+			}
 			<form asp-action="Login" method="post">
 					<div class="form-group">
 						<label asp-for="Username">User Name</label>

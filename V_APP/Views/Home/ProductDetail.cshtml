@@ -130,9 +130,16 @@
                 </dd>
             </dl>
             <div class="text-nowrap">
-            <a asp-action="UpdateProduct" asp-route-id="@Model.Id" class="btn btn-warning btn-sm"><i class="bi bi-pencil"> Edit</i></a>
-            <a asp-action="ProductList" class="btn btn-info btn-sm"><i class="bi bi-list"> Show list</i></a>
-            <a asp-action="DeleteProduct" asp-route-id="@Model.Id" class="btn btn-danger btn-sm"><i class="bi bi-list"> Delete</i></a>
+                @if (Context.Session.GetInt32("Id") == Model.SellerId || Context.Session.GetInt32("UserType") == 4 || Context.Session.GetInt32("UserType") == 3)
+                {
+                    <a asp-action="UpdateProduct" asp-route-id="@Model.Id" class="btn btn-warning btn-sm"><i class="bi bi-pencil"> Edit</i></a>
+                }
+                <a asp-action="ProductList" class="btn btn-info btn-sm"><i class="bi bi-list"> Show list</i></a>
+                @if (Context.Session.GetInt32("Id") == Model.SellerId || Context.Session.GetInt32("UserType") == 4)
+                {
+                    <a asp-action="AddDiscount" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm"><i class="bi bi-arrow-down"> Add Discount</i></a>
+                    <a asp-action="DeleteProduct" asp-route-id="@Model.Id" class="btn btn-danger btn-sm"><i class="bi bi-list"> Delete</i></a>
+                }
             <a data-pid="@Model.Id" class="btn btn-success btn-sm addtocart"><i class="bi bi-cart-fill"> Add to cart</i></a>
 @*            @if (Context.Session.GetInt32("Type") == 4)
             {
@@ -153,26 +160,18 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-@*      <script>
-
-         $(function(){
-
-            $('#count').load('/Products/Count?id=@Model.Id');
-
-        });
-
-    </script>*@
-
 
 <script>
     $(function () {
+
+        //alert("hii");
         //$.ajax({
         //    url: '/Products/Count',
         //    type: 'post',
         //    data: { id: @Model.Id}
         //});
 
-
+        //$('#count').load('/Products/Count?id=@Model.Id');
 
         //$("#RC").load("/Products/GetRC?id=@Model.Id&cid=@Model.CategoryId");
             //$.ajax({
